@@ -6,22 +6,43 @@ int ledPin = 13; // LED connected to digital pin 13
 int inPin = 7;   // pushbutton connected to digital pin 7
 int val = 0;     // variable to store the read value
 
-byte ROWS = 4;
-byte COLS = 4;
+int EMPTY=0;
+int NOC=0;
+byte ROWS = 6;
+byte COLS = 5;
 const byte max = 10;
 
-int rows[] = {2, 3, 4, 5};
-int cols[] = {6, 7, 8, 9};
-char matrix[][4]= {
-    {'a','b','c',KEY_LEFT_ALT },
-    {'1','2','3','4' },
-    {'5','6','7','8' },
-    {'9','0','+','=' }
+int rows[] = {5,4,3,2,1,0};
+int cols[] = {A0,A1, A2,A3, A4};
+char matrix[][5][6]= {
+    {
+        {'6','7','8','9','0',KEY_BACKSPACE},
+        {'y','u','i','o','p',KEY_ESC},
+        {'h','j','k','l',';',KEY_RETURN},
+        {'n','m',',','.','/',KEY_LEFT_SHIFT},
+        {KEY_RIGHT_ALT,KEY_RIGHT_CTRL,KEY_RETURN,KEY_ESC,'/',KEY_LEFT_SHIFT}
+    },{
+        {KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
+        {'[',']', NOC, NOC,NOC, NOC},
+        {KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW,NOC},
+        {'=','-','+',NOC,NOC,NOC},
+        {NOC,NOC,NOC,NOC,NOC,NOC}
+    }
 };
+char up=KEY_RIGHT_ALT;
+char down=KEY_RIGHT_CTRL;
+byte layer=0;
+char key(byte col,byte row){
+    byte currentLayer=layer;
+    char k = matrix[currentLayer][col][row];
+    while (k==NOC&&currentLayer!=0){
+        currentLayer--;
 
+        k = matrix[currentLayer][col][row];
+    }
+    return k;
+}
 
-
-int EMPTY=0;
 int pressed[max]={};
 int pressedNow[max]={};
 int i;
@@ -50,36 +71,73 @@ boolean contains(int array[], int element, byte size){
     return false;
 }
 
+boolean countPressed(int array[], byte size){
+    byte count=0;
 
+    for (int i = 0; i < size; i++) {
+        if (array[i] != EMPTY) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void layerUp(){
+    layer++;
+
+    Serial.println("layer up");
+}
+
+void layerDown(){
+    if (layer>0){
+        layer--;
+        Serial.println("layer down");
+    }
+}
+boolean single;
 void press_release(){
     int i;
     int key;
 
+    String relpres="PressedNow: " ;
+    Serial.println(relpres + key);
+    String rel="Press ";
     for (i=0;i<max;i++){
         key = pressed[i];
         if(key!=EMPTY){
-            Serial.print(key);
+            /* Serial.print(key); */
         }
         if(key!=EMPTY&&!contains(pressedNow, key, max)){
             Keyboard.release(key);
             String rel="Release ";
+            if (single) {
+                if (key==up){
+                    layerUp();
+                } else if (key==down){
+                    layerDown();
+                }
+            }
             Serial.println(rel + key);
         }
     }
     for (i=0;i<max;i++){
         key = pressedNow[i];
         if(key!=EMPTY){
-            Serial.print(key);
+            /* Serial.print(key); */
         }
         if(key!=EMPTY&&!contains(pressed, key, max)){
-            String rel="Press ";
             Serial.println(rel + key);
             Keyboard.press(key);
+            single = (i==0 && countPressed(pressedNow, max)==1) ;
         }
         pressed[i]=key;
     }
+    Serial.println("pressed");
+
     for (i=0;i<max;i++){
         key = pressedNow[i];
+        rel="PressedNow: " ;
+        /* Serial.print(rel + key); */
         pressed[i]=key;
     }
 }
@@ -103,7 +161,7 @@ void scan_col(int col){
     int i;
     byte colPin=cols[col];
     byte rowPin;
-        pinMode(colPin, OUTPUT);      // sets the digital pin 13 as output
+    pinMode(colPin, OUTPUT);      // sets the digital pin 13 as output
     digitalWrite(colPin, 0);
     for (row = 0; row < ROWS; row = row + 1) {
         rowPin=rows[row];
@@ -114,10 +172,10 @@ void scan_col(int col){
             /* Serial.println(msg + col ); */
             msg = "row:";
             /* Serial.println(msg + row ); */
-            insert(pressedNow, matrix[row][col],max);
+            insert(pressedNow, key(col,row), max);
         }
     }
-        pinMode(colPin, INPUT);      // sets the digital pin 7 as input
+    pinMode(colPin, INPUT);      // sets the digital pin 7 as input
     /* digitalWrite(colPin, 1); */
 
 }
@@ -135,7 +193,7 @@ void setup()
         pin=rows[i];
         pinMode(pin, INPUT_PULLUP);      // sets the digital pin 7 as input
     }
-    pinMode(ledPin, OUTPUT);      // sets the digital pin 13 as output
+    /* pinMode(ledPin, OUTPUT);      // sets the digital pin 13 as output */
     Serial.begin(9600);           // set up Serial library at 9600 bps
     Serial.println("Start keyboard scan");
     emptyArray(pressed, max);
@@ -145,9 +203,9 @@ void setup()
 
 void loop()
 {
-    boolean led = false;
-    led = !led;
-    digitalWrite(ledPin, led);    // sets the LED to the button's value
+    /* boolean led = false; */
+    /* led = !led; */
+    /* digitalWrite(ledPin, led);    // sets the LED to the button's value */
     scan();
     delay(100);
     /* Serial.println("still testing"); */
