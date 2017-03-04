@@ -1,7 +1,6 @@
-#include "Keyboard.h"
 #include "Mouse.h"
 
-/* #include <Keyboard.h> */
+#include <Keyboard.h>
 
 int ledPin = 13; // LED connected to digital pin 13
 int inPin = 7;   // pushbutton connected to digital pin 7
@@ -14,13 +13,18 @@ byte COLS = 5;
 const byte max = 10;
 
 const byte MAX_LAYER = 2;
-const byte MBLEFT  = 1;
-const byte MBRIGHT  = 2;
-const byte MBMID  = 3;
-const byte MLEFT  = 4;
-const byte MRIGHT  = 5;
-const byte MUP  = 6;
-const byte MDOWN  = 7;
+const char MBLEFT  = 'u';
+const char MBRIGHT  = 'o';
+const char MBMID  = 'i';
+const char MLEFT  = 'h';
+const char MRIGHT  = 'l';
+const char MUP  = 'k';
+const char MDOWN  = 'j';
+
+const char L1=225;
+const char L2=226;
+const char L1code=' ';
+const char L2code=KEY_BACKSPACE;
 
 int rows[] = {5,4,3,2,1,0};
 int cols[] = {A0,A1, A2,A3, A4};
@@ -31,7 +35,7 @@ char matrix[][5][6]= {
         {'y','u','i','o','p',KEY_ESC},
         {'h','j','k','l',';',KEY_RETURN},
         {'n','m',',','.','/',KEY_LEFT_SHIFT},
-        {KEY_RIGHT_ALT,KEY_RIGHT_CTRL,KEY_RETURN,KEY_ESC,'/',KEY_LEFT_SHIFT}
+        {L1,L2,KEY_RETURN,KEY_ESC,'/',KEY_LEFT_SHIFT}
     },{
         {KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
         {'[',']', NOC, NOC, NOC, NOC},
@@ -45,13 +49,31 @@ char matrix[][5][6]= {
         {NOC,NOC,NOC,NOC,NOC,NOC},
         {NOC,NOC,NOC,NOC,NOC,NOC}
     }
-
 };
+/* char matrix[][5][6]= { */
+    /* { */
+        /* {KEY_ESC,'1','2','3','4','5'}, */
+        /* {KEY_TAB,'q','w','e','r','t'}, */
+        /* {KEY_LEFT_CTRL,'a','s','d','f','g'}, */
+        /* {KEY_LEFT_SHIFT,'z','x','c','v','b'}, */
+        /* {L1,L2,KEY_RETURN,KEY_LEFT_ALT,KEY_LEFT_GUI,L1} */
+    /* },{ */
+        /* {KEY_F6,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5}, */
+        /* {'[',']', NOC, NOC, NOC, NOC},  */
+        /* {KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW,'\'', '\\'}, */
+        /* {'=','-','+',NOC,NOC,NOC}, */
+        /* {NOC,NOC,NOC,NOC,NOC,NOC} */
+    /* },{ */
+        /* {NOC,NOC,NOC,NOC,NOC,NOC}, */
+        /* {NOC, MBLEFT, MBMID, MBRIGHT,NOC, NOC}, */
+        /* {MLEFT, MDOWN, MUP, MRIGHT, NOC}, */
+        /* {NOC,NOC,NOC,NOC,NOC,NOC}, */
+        /* {NOC,NOC,NOC,NOC,NOC,NOC} */
+    /* } */
+/* }; */
 
 char up=KEY_RIGHT_ALT;
 char down=KEY_RIGHT_CTRL;
-char l1=KEY_RIGHT_ALT;
-char l2=KEY_RIGHT_CTRL;
 byte layer=0;
 char key(byte col,byte row){
     byte currentLayer=layer;
@@ -63,16 +85,16 @@ char key(byte col,byte row){
     return k;
 }
 
-int pressed[max]={};
-int pressedNow[max]={};
-int i;
-void emptyArray(int array[],int max){
+char pressed[max]={};
+char pressedNow[max]={};
+byte i;
+void emptyArray(char array[],int max){
     for (i=0;i<max;i++){
         array[i]=EMPTY;
     }
 }
 
-void insert(int array[],int val, byte max){
+void insert(char array[],char val, byte max){
     int i;
     for (i=0;i<max;i++){
         if(array[i]==EMPTY){
@@ -82,7 +104,7 @@ void insert(int array[],int val, byte max){
     }
 }
 
-boolean contains(int array[], int element, byte size){
+boolean contains(char array[], char element, byte size){
     for (int i = 0; i < size; i++) {
         if (array[i] == element) {
             return true;
@@ -91,7 +113,7 @@ boolean contains(int array[], int element, byte size){
     return false;
 }
 
-boolean countPressed(int array[], byte size){
+boolean countPressed(char array[], byte size){
     byte count=0;
 
     for (int i = 0; i < size; i++) {
@@ -116,23 +138,42 @@ void layerDown(){
     }
 }
 byte move=1;
-void handleMouseMove(char key){
+bool isMouseMove(char key){
+    if (layer!=MOUSE_LAYER) return false;
+    switch (key){
+        case MLEFT:
+            return true;
+        case MRIGHT:
+            return true;
+        case MUP:
+            return true;
+        case MDOWN:
+            return true;
+        default:
+            return false;
+    }
+}
+bool handleMouseMove(char key){
+    if (layer!=MOUSE_LAYER) return false;
     switch (key){
         case MLEFT:
             Mouse.move(-move,0,0);
-            break;
+            return true;
         case MRIGHT:
             Mouse.move(move,0,0);
-            break;
+            return true;
         case MUP:
             Mouse.move(0,-move,0);
-            break;
+            return true;
         case MDOWN:
             Mouse.move(0,move,0);
-            break;
+            return true;
+        default:
+            return false;
     }
 }
 bool handleMousePress(char key){
+    if (layer!=MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
             Mouse.press(MOUSE_LEFT);
@@ -148,6 +189,7 @@ bool handleMousePress(char key){
     }
 }
 bool handleMouseRelease(char key){
+    if (layer!=MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
             Mouse.release(MOUSE_LEFT);
@@ -166,36 +208,46 @@ bool handleMouseRelease(char key){
 boolean single;
 void press_release(){
     int i;
-    int key;
+    char key;
 
     String relpres="PressedNow: " ;
     /* Serial.println(relpres + key); */
     String rel="Press ";
     for (i=0;i<max;i++){
+        bool mouseMove=false;
         key = pressed[i];
-        if(key!=EMPTY){
-            if (layer==MOUSE_LAYER) {
-                handleMouseMove(key);
-            }
-            /* Serial.print(key); */
-        }
-        if(key!=EMPTY&&!contains(pressedNow, key, max)){
-            if (layer==MOUSE_LAYER&&!handleMouseRelease(key)) {
+        /* PRESS */
+        if(key!=EMPTY&&!handleMouseMove(key)&&!contains(pressedNow, key, max)){
+            byte kk = 0 + key;
+            String dep="depress: ";
+            Serial.println(dep + kk);
+            if (handleMouseRelease(key)) {
+                Serial.println("mouse");
             } else {
-                String rel="Release ";
-                Serial.println(rel + key);
-                Keyboard.release(key);
+                if(key==L1||key==L2){  
+                    Serial.println("Back to level 0");
+                    layer=0;
+                    char code;
+                    if (single) {
+                        if (key==L1) {code=L1code;  }
+                        if (key==L2) {code=L2code; }
+                        String msg="Write ";
+                        Serial.println(msg + code);
+                        Keyboard.write(code);
+                    }
+                } else {
+                    String rel="Release ";
+                    Serial.println(rel + key);
+                    Keyboard.release(key);
+                }
+                /* if (single) { */
+                /* if (key==up){ */
+                /* layerUp(); */
+                /* } else if (key==down){ */
+                /* layerDown(); */
+                /* } */
+                /* } */
             }
-            if(key==l1||key==l2){
-                layer=0;
-            }
-            /* if (single) { */
-            /* if (key==up){ */
-            /* layerUp(); */
-            /* } else if (key==down){ */
-            /* layerDown(); */
-            /* } */
-            /* } */
         }
     }
     for (i=0;i<max;i++){
@@ -204,17 +256,23 @@ void press_release(){
             /* Serial.print(key); */
         }
         if(key!=EMPTY&&!contains(pressed, key, max)){
-            if (layer==MOUSE_LAYER&&!handleMousePress(key)) {
+            byte kk = 0 + key;
+            String pre="press:  ";
+            Serial.println(pre + kk);
+            if (handleMousePress(key)||isMouseMove(key)) {
+                Serial.println("mouse");
             } else {
-                Serial.println(rel + key);
-                if (key!=l1&&key!=l2) {
+                if (key!=L1&&key!=L2) {
+                    Serial.println(rel + key);
                     Keyboard.press(key);
                 }
             }
             single = (i==0 && countPressed(pressedNow, max)==1) ;
-            if (key==l1) {
+            if (key==L1) {
+                Serial.println("Level 1");
                 layer=1;
-            } else if (key==l2){
+            } else if (key==L2){
+                Serial.println("Level 2");
                 layer=2;
             }
 
