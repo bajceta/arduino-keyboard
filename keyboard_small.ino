@@ -26,7 +26,7 @@ const char L2=226;
 const char L1code=' ';
 const char L2code=KEY_BACKSPACE;
 
-int rows[] = {5,4,3,2,1,0};
+int rows[] = {5,4,3,2,7,6};
 int cols[] = {A0,A1, A2,A3, A4};
 const byte MOUSE_LAYER = 2;
 char matrix[][5][6]= {
@@ -206,6 +206,20 @@ bool handleMouseRelease(char key){
 }
 
 boolean single;
+
+
+void handlePress(byte col,byte row){
+
+}
+
+void handleHold(byte col, byte row){
+
+}
+
+void handleRelease(byte col, byte row){
+
+}
+
 void press_release(){
     int i;
     char key;
@@ -342,11 +356,18 @@ void setup()
     }
     /* pinMode(ledPin, OUTPUT);      // sets the digital pin 13 as output */
     Serial.begin(9600);           // set up Serial library at 9600 bps
+    Serial1.begin(9600);           // set up Serial library at 9600 bps
     Serial.println("Start keyboard scan");
     emptyArray(pressed, max);
     Keyboard.begin();
     Mouse.begin();
-
+}
+ 
+void handleSerial() {
+ if (Serial1.available()) {
+    byte inByte = Serial1.read();
+    Serial.print(inByte, BYTE); 
+  }
 }
 
 void loop()
@@ -358,3 +379,4 @@ void loop()
     delay(3);
     /* Serial.println("still testing"); */
 }
+
