@@ -7,7 +7,13 @@ int inPin = 7;   // pushbutton connected to digital pin 7
 int val = 0;     // variable to store the read value
 
 int EMPTY=0;
+char EMPTY_SERIAL=101;
+
 int NOC=0;
+
+const byte LEFT_ROWS=6;
+const byte LEFT_COLS=5;
+
 byte ROWS = 6;
 byte COLS = 5;
 const byte max = 10;
@@ -26,28 +32,28 @@ const char L2=226;
 const char L1code=' ';
 const char L2code=KEY_BACKSPACE;
 
-int rows[] = {5,4,3,2,7,6};
-int cols[] = {A0,A1, A2,A3, A4};
+int rows[] = {7,6,5,4,3,2};
+int cols[] = {A0,A1,A2,A3,A4};
 const byte MOUSE_LAYER = 2;
-char matrix[][5][6]= {
+char matrix[][5][12]= {
 	{
-		{'6','7','8','9','0',KEY_BACKSPACE},
-		{'y','u','i','o','p',KEY_ESC},
-		{'h','j','k','l',';',KEY_RETURN},
-		{'n','m',',','.','/',KEY_LEFT_SHIFT},
-		{L1,L2,KEY_RETURN,KEY_ESC,'/',KEY_LEFT_SHIFT}
+		{KEY_ESC,'1','2','3','4','5','6','7','8','9','0',KEY_BACKSPACE},
+		{KEY_TAB,'q','w','e','r','t','y','u','i','o','p',KEY_ESC},
+		{KEY_LEFT_CTRL,'a','s','d','f','g','h','j','k','l',';',KEY_RETURN},
+		{KEY_LEFT_SHIFT,'z','x','c','v','b','n','m',',','.','/',KEY_LEFT_SHIFT},
+		{L1,L2,KEY_RETURN,KEY_LEFT_ALT,KEY_LEFT_GUI,L1,L1,L2,KEY_RETURN,KEY_ESC,'/',KEY_LEFT_SHIFT}
 	},{
-		{KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
-		{'[',']', NOC, NOC, NOC, NOC},
-		{KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW,'\'', '\\'},
-		{'=','-','+',NOC,NOC,NOC},
-		{NOC,NOC,NOC,NOC,NOC,NOC}
+		{KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
+		{NOC,NOC,NOC,NOC,NOC,NOC,'[',']', NOC, NOC, NOC, NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW,'\'', '\\'},
+		{NOC,NOC,NOC,NOC,NOC,NOC,'=','-','+',NOC,NOC,NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC}
 	},{
-		{NOC,NOC,NOC,NOC,NOC,NOC},
-		{NOC, MBLEFT, MBMID, MBRIGHT,NOC, NOC},
-		{MLEFT, MDOWN, MUP, MRIGHT, NOC},
-		{NOC,NOC,NOC,NOC,NOC,NOC},
-		{NOC,NOC,NOC,NOC,NOC,NOC}
+		{NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,NOC, MBLEFT, MBMID, MBRIGHT,NOC, NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,MLEFT, MDOWN, MUP, MRIGHT, NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC},
+		{NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC,NOC}
 	}
 };
 /* char matrix[][5][6]= { */
@@ -75,6 +81,7 @@ char matrix[][5][6]= {
 char up=KEY_RIGHT_ALT;
 char down=KEY_RIGHT_CTRL;
 byte layer=0;
+
 char key(byte col,byte row){
 	byte currentLayer=layer;
 	char k = matrix[currentLayer][col][row];
@@ -88,31 +95,32 @@ char key(byte col,byte row){
 char pressed[max]={};
 char pressedNow[max]={};
 byte i;
-void emptyArray(char array[],int max){
+
+void fillArray(char array[],int max, char val){
 	for (i=0;i<max;i++){
-		array[i]=EMPTY;
+		array[i]=val;
+	}
+}
+
+
+void replace(char array[],char oldVal,char newVal, byte max){
+	int i;
+	for (i=0;i<max;i++){
+		if(array[i]==oldVal){
+			array[i]=newVal;
+			break;
+		}
 	}
 }
 
 void insert(char array[],char val, byte max){
-	int i;
-	for (i=0;i<max;i++){
-		if(array[i]==EMPTY){
-			array[i]=val;
-			break;
-		}
-	}
+	replace(array,EMPTY,val,max);
 }
 
 void remove(char array[],char val, byte max){
-	int i;
-	for (i=0;i<max;i++){
-		if(array[i]==val){
-			array[i]=EMPTY;
-			break;
-		}
-	}
+	replace(array,val,EMPTY,max);
 }
+
 boolean contains(char array[], char element, byte size){
 	for (int i = 0; i < size; i++) {
 		if (array[i] == element) {
@@ -131,6 +139,33 @@ boolean countPressed(char array[], byte size){
 		}
 	}
 	return count;
+}
+
+char serialPressed[max] = {};
+
+void handleSerial() {
+	if (Serial1.available()) {
+		char inByte = (char)Serial1.read();
+		Serial.println(inByte,DEC);
+		if (inByte<0) {
+			/* remove  */
+			replace(serialPressed, -inByte, EMPTY_SERIAL, max);
+		} else {
+			/* insert */
+			replace(serialPressed, EMPTY_SERIAL, inByte,  max);
+		}
+	}
+}
+
+char serialKey(char val){
+	char realVal = val-1;
+	byte row=0;
+	byte col=0;
+	if (realVal!=0) {
+		row = realVal % 10;
+		col = realVal / 10;
+	}
+	return key(col,row);
 }
 
 void layerUp(){
@@ -217,7 +252,7 @@ bool handleMouseRelease(char key){
 boolean single;
 
 void handlePress(char key){
-    String rel="Release: ";
+	String rel="Press: ";
 	if (handleMousePress(key)||isMouseMove(key)) {
 		Serial.println("mouse");
 	} else {
@@ -226,7 +261,6 @@ void handlePress(char key){
 			Keyboard.press(key);
 		}
 	}
-	single = (i==0 && countPressed(pressedNow, max)==1) ;
 	if (key==L1) {
 		Serial.println("Level 1");
 		layer=1;
@@ -258,7 +292,7 @@ void handleRelease(char key){
 				Keyboard.write(code);
 			}
 		} else {
-			String rel="Release ";
+			String rel="Release: ";
 			Serial.println(rel + key);
 			Keyboard.release(key);
 		}
@@ -283,6 +317,7 @@ void press_release(){
 		key = pressedNow[i];
 		if(key!=EMPTY&&!contains(pressed, key, max)){
 			handlePress(key);
+			single = (i==0 && countPressed(pressedNow, max)==1) ;
 		}
 	}
 
@@ -292,10 +327,20 @@ void press_release(){
 	}
 }
 
-void scan(){
-	int col;
+void pressSerial(){
 	int i;
-	emptyArray(pressedNow,max);
+	for (i=0; i<max; i++){
+		char input = serialPressed[i];
+		if (input!=EMPTY_SERIAL) {
+			insert(pressedNow, serialKey(input), max);
+		}
+	}
+}
+
+void scan(){
+	byte col;
+	byte i;
+	fillArray(pressedNow,max,EMPTY);
 	for (i = 0; i < COLS; i = i + 1) {
 		scan_col(i);
 	}
@@ -303,12 +348,15 @@ void scan(){
 	for(i=0;i<max;i++){
 		/* Serial.print(pressedNow[i]); */
 	}
+	handleSerial();
+	pressSerial();
 	press_release();
 }
 
-void scan_col(int col){
-	int row;
-	int i;
+
+void scan_col(byte col){
+	byte row;
+	byte i;
 	byte colPin=cols[col];
 	byte rowPin;
 	pinMode(colPin, OUTPUT);      // sets the digital pin 13 as output
@@ -322,7 +370,7 @@ void scan_col(int col){
 			/* Serial.println(msg + col ); */
 			msg = "row:";
 			/* Serial.println(msg + row ); */
-			insert(pressedNow, key(col,row), max);
+			insert(pressedNow, key(col,LEFT_ROWS+row), max);
 		}
 	}
 	pinMode(colPin, INPUT);      // sets the digital pin 7 as input
@@ -347,16 +395,12 @@ void setup()
 	Serial.begin(9600);           // set up Serial library at 9600 bps
 	Serial1.begin(9600);           // set up Serial library at 9600 bps
 	Serial.println("Start keyboard scan");
-	emptyArray(pressed, max);
+	fillArray(pressed, max, EMPTY);
+	fillArray(serialPressed, max, EMPTY_SERIAL);
 	Keyboard.begin();
 	Mouse.begin();
 }
 
-void handleSerial() {
-	if (Serial1.available()) {
-		byte inByte = Serial1.read();
-	}
-}
 
 void loop()
 {
@@ -365,6 +409,6 @@ void loop()
 	/* digitalWrite(ledPin, led);    // sets the LED to the button's value */
 	scan();
 	delay(3);
-	/* Serial.println("still testing"); */
+	/* Seial.println("still testing"); */
 }
 
