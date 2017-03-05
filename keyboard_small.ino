@@ -27,8 +27,8 @@ const char MRIGHT  = 'l';
 const char MUP  = 'k';
 const char MDOWN  = 'j';
 
-const char L1=225;
-const char L2=226;
+const char L1=1;
+const char L2=2;
 const char L1code=' ';
 const char L2code=KEY_BACKSPACE;
 
@@ -130,12 +130,12 @@ boolean contains(char array[], char element, byte size){
 	return false;
 }
 
-boolean countPressed(char array[], byte size){
+byte countPressed(char array[], byte size){
 	byte count=0;
-
+    
 	for (int i = 0; i < size; i++) {
 		if (array[i] != EMPTY) {
-			count++;
+			count=count+1;
 		}
 	}
 	return count;
@@ -252,6 +252,11 @@ bool handleMouseRelease(char key){
 boolean single;
 
 void handlePress(char key){
+    String msg="count=  ";
+    Serial.println(msg+countPressed(pressedNow, max));
+	if (countPressed(pressedNow, max)==1){
+		single=true;
+	}  else single=false;
 	String rel="Press: ";
 	if (handleMousePress(key)||isMouseMove(key)) {
 		Serial.println("mouse");
@@ -317,9 +322,10 @@ void press_release(){
 		key = pressedNow[i];
 		if(key!=EMPTY&&!contains(pressed, key, max)){
 			handlePress(key);
-			single = (i==0 && countPressed(pressedNow, max)==1) ;
 		}
 	}
+	/* String rel="Single: "; */
+	/* Serial.println(rel + single); */
 
 	for (i=0;i<max;i++){
 		key = pressedNow[i];
