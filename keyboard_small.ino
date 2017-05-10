@@ -30,8 +30,6 @@ const char MDOWN  = 'j';
 const char L1 = 1;
 const char L2 = 2;
 const char L3 = 3;
-const char L1code = ' ';
-const char L2code = KEY_LEFT_ALT;
 const char MUTE = 121;
 const char VDOWN = 122;
 const char VUP = 123;
@@ -40,22 +38,24 @@ const char MICMUTE = 198;
 int rows[] = {7, 6, 5, 4, 3, 2};
 int cols[] = {A0, A1, A2, A3, A4};
 const byte MOUSE_LAYER = 2;
-const byte SINGLES = 2;
+const byte SINGLES = 4;
 char singleAction[][2]={
     { KEY_LEFT_SHIFT, KEY_TAB },
-    { KEY_LEFT_GUI, KEY_ESC }
+    { KEY_LEFT_GUI, KEY_ESC },
+    { L1, ' ' },
+    { L2, ' ' }
 };
+
 char matrix[][5][12] = {
     {
-        /* {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC}, */
-        {KEY_ESC,'1','2','3','4','5','6','7','8','9','0',KEY_BACKSPACE},
-        {KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_LEFT_CTRL},
+        {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC},
+        /* {KEY_ESC,'1','2','3','4','5','6','7','8','9','0',KEY_BACKSPACE}, */
+        {KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE},
         {KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', KEY_RETURN},
         {KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT},
-        {L2, L2, L2, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L1, KEY_LEFT_SHIFT, KEY_RETURN, KEY_ESC, L2, L2}
+        {L2, L2, L2, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_ESC, L3, L2}
     }, {
-        /* {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC}, */
-        {KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
+        {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC},
         {NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '#', NOC},
         {NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, '$', NOC},
         {NOC, '^', '&', '|', '(', ')', '=', '-', '+', '_', '~', NOC},
@@ -63,41 +63,18 @@ char matrix[][5][12] = {
     },{
         {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC},
         {NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', NOC},
-        {NOC, NOC, NOC, NOC, NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC},
-        {NOC, NOC, MUTE, VDOWN, VUP, MICMUTE, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC},
-        {NOC, NOC, NOC, NOC, NOC, NOC, KEY_ESC, NOC, NOC, NOC, NOC, NOC}
+        {NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC},
+        {NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC},
+        {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC}
     }, {
         {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC},
-        {NOC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, NOC},
+        {KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11},
         {NOC, KEY_F11, KEY_F12, NOC, NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC},
         {NOC, NOC, NOC, NOC, NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC},
         {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC}
     }
 };
-/* char matrix[][5][6]= { */
-/* { */
-/* {KEY_ESC,'1','2','3','4','5'}, */
-/* {KEY_TAB,'q','w','e','r','t'}, */
-/* {KEY_LEFT_CTRL,'a','s','d','f','g'}, */
-/* {KEY_LEFT_SHIFT,'z','x','c','v','b'}, */
-/* {L1,L2,KEY_RETURN,KEY_LEFT_ALT,KEY_LEFT_GUI,L1} */
-/* },{ */
-/* {KEY_F6,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5}, */
-/* {'[',']', NOC, NOC, NOC, NOC},  */
-/* {KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW,'\'', '\\'}, */
-/* {'=','-','+',NOC,NOC,NOC}, */
-/* {NOC,NOC,NOC,NOC,NOC,NOC} */
-/* },{ */
-/* {NOC,NOC,NOC,NOC,NOC,NOC}, */
-/* {NOC, MBLEFT, MBMID, MBRIGHT,NOC, NOC}, */
-/* {MLEFT, MDOWN, MUP, MRIGHT, NOC}, */
-/* {NOC,NOC,NOC,NOC,NOC,NOC}, */
-/* {NOC,NOC,NOC,NOC,NOC,NOC} */
-/* } */
-/* }; */
 
-char up = KEY_RIGHT_ALT;
-char down = KEY_RIGHT_CTRL;
 byte layer = 0;
 
 char key(byte col, byte row) {
@@ -234,28 +211,6 @@ bool handleMouseMove(char key) {
         skipcount=0;
     }
 
-    /* if (lastkey==key)  { */
-    /* presslength=presslength+1; */
-    /* if (presslength<200) { */
-    /* skip=15; */
-    /* } else if (presslength<400) { */
-    /* skip=7; */
-    /* } else { */
-    /* skip=2; */
-    /* } */
-    /* if (skipcount<skip) { */
-    /* skipcount++; */
-    /* return false; */
-    /* } else { */
-    /* skipcount=0; */
-    /* } */
-    /* } else { */
-    /* lastkey=key; */
-    /* presslength=0; */
-    /* skipcount=0; */
-    /* return false; */
-    /* } */
-
     switch (key) {
         case MLEFT:
             Mouse.move(-move, 0, 0);
@@ -329,7 +284,11 @@ void handlePress(char key) {
         layer = 1;
     } else if (key == L2) {
         Serial.println("Level 2");
-        layer = 2;
+        if (layer==1) {
+            layer = 3;
+        } else {
+            layer = 2;
+        }
     } else if (key == L3) {
         Serial.println("Level 2");
         layer = 3;
@@ -362,24 +321,11 @@ void handleRelease(char key) {
         if (key == L1 || key == L2 || key == L3) {
             Serial.println("Back to level 0");
             layer = 0;
-            char code;
-            if (single) {
-                if (key == L1) {
-                    code = L1code;
-                }
-                if (key == L2) {
-                    code = L2code;
-                }
-                String msg = "Write ";
-                Serial.println(msg + code);
-                Keyboard.write(code);
-            }
-        } else {
-            String rel = "Release: ";
-            Serial.println(rel + key);
-            Keyboard.release(key);
-            handleSinglePress(key);
         }
+        String rel = "Release: ";
+        Serial.println(rel + key);
+        Keyboard.release(key);
+        handleSinglePress(key);
     }
 }
 
