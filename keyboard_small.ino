@@ -62,7 +62,7 @@ char matrix[][5][12] = {
         {NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC}
     },{
         {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC},
-        {NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', NOC},
+        {NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_DELETE},
         {NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC},
         {NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC},
         {NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC}
@@ -281,7 +281,11 @@ void handlePress(char key) {
     /* if (single) { */
     if (key == L1) {
         Serial.println("Level 1");
-        layer = 1;
+        if (layer==2) {
+            layer = 3;
+        } else {
+            layer = 1;
+        }
     } else if (key == L2) {
         Serial.println("Level 2");
         if (layer==1) {
