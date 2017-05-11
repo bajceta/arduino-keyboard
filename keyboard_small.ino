@@ -11,6 +11,7 @@ char EMPTY_SERIAL = 101;
 
 int NOC = 0;
 
+uint8_t lastPosPress;
 
 const byte max = 10;
 
@@ -21,7 +22,9 @@ const char MBMID  = 'i';
 const char MLEFT  = 'h';
 const char MRIGHT  = 'l';
 const char MUP  = 'k';
-const char MDOWN  = 'j';
+const char MDOWN = 'j';
+const char MFAST = ';';
+const char MLATCH = '/';
 
 const char L1 = 1;
 const char L2 = 2;
@@ -42,10 +45,10 @@ int cols[] = {A1, A2, A3, A4};
 const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, KEY_ESC, ' ', ' ', KEY_TAB, NOC, NOC, NOC, NOC
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, KEY_ESC, ' ', ' ', KEY_TAB, NOC, NOC, NOC, NOC
 };
 uint8_t matrix[][48] = {
     {
@@ -60,8 +63,8 @@ uint8_t matrix[][48] = {
         NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC
     },{
         NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_DELETE,
-        NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC,
-        NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
+        NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
+        NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, MLATCH, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
         KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,
@@ -203,15 +206,19 @@ bool isMouseMove(char key) {
 char lastkey=EMPTY;
 int presslength=0;
 byte skipcount=0;
-bool handleMouseMove(char key) {
-    byte skip;
-    if (layer != MOUSE_LAYER) return false;
-    if (key!=MLEFT&&key!=MDOWN&&key!=MRIGHT&&key!=MUP) return false;
-    if (contains(pressedKeycode, KEY_LEFT_SHIFT, max)) {
+byte skip;
+bool mouseLatch;
+
+void toggleFast(){
+    if (skip==9) {
         skip=1;
     } else {
         skip=9;
     }
+}
+bool handleMouseMove(char key) {
+    if (layer != MOUSE_LAYER) return false;
+    if (key!=MLEFT&&key!=MDOWN&&key!=MRIGHT&&key!=MUP&&key!=MFAST&&key!=MLATCH) return false;
     if (skipcount<skip) {
         skipcount++;
         return false;
@@ -236,33 +243,60 @@ bool handleMouseMove(char key) {
             return false;
     }
 }
+
+bool ml;
+bool mm;
+bool mr;
+void toggleMouseLatch(){
+    mouseLatch=!mouseLatch;
+    ml=true;
+    mm=true;
+    mr=true;
+}
+
 bool handleMousePress(char key) {
     if (layer != MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
-            Mouse.press(MOUSE_LEFT);
+            if (!mouseLatch||ml) Mouse.press(MOUSE_LEFT);
+            ml=!ml;
             return true;
         case MBMID:
-            Mouse.press(MOUSE_MIDDLE);
+            if (!mouseLatch||mm) Mouse.press(MOUSE_MIDDLE);
+            mm=!mm;
             return true;
         case MBRIGHT:
-            Mouse.press(MOUSE_RIGHT);
+            if (!mouseLatch||mr) Mouse.press(MOUSE_RIGHT);
+            mr=!mr;
             return true;
         default:
             return false;
     }
 }
+
 bool handleMouseRelease(char key) {
     if (layer != MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
-            Mouse.release(MOUSE_LEFT);
+            if (!mouseLatch||ml){
+                Mouse.release(MOUSE_LEFT);
+            }
             return true;
         case MBMID:
-            Mouse.release(MOUSE_MIDDLE);
+            if (!mouseLatch||mm){
+                Mouse.release(MOUSE_MIDDLE);
+            }
             return true;
         case MBRIGHT:
-            Mouse.release(MOUSE_RIGHT);
+            if (!mouseLatch||mr) {
+                Mouse.release(MOUSE_RIGHT);
+            }
+            return true;
+        case MLATCH:
+            toggleMouseLatch();
+            return true;
+        case MFAST:
+            toggleFast();
             return true;
         default:
             return false;
@@ -270,8 +304,8 @@ bool handleMouseRelease(char key) {
 }
 
 boolean single;
-
 void handlePress(char pos) {
+    lastPosPress=pos;
     String msg = "count=  ";
     Serial.println(msg + countPressed(pressedNow, max));
     if (countPressed(pressedNow, max) == 1) {
@@ -279,15 +313,16 @@ void handlePress(char pos) {
     }  else single = false;
     String rel = "Press: ";
     uint8_t key = keycode(pos);
-
     if (handleMousePress(key) || isMouseMove(key)) {
         Serial.println("mouse");
     } else {
         if (key != L1 && key != L2 && key != L3) {
             Serial.println(rel + key);
-            int index = insert(pressedPos, pos, max);
-            pressedKeycode[index]=key;
-            Keyboard.press(key);
+            if (!contains(pressedKeycode, key, max)){
+                int index = insert(pressedPos, pos, max);
+                pressedKeycode[index]=key;
+                Keyboard.press(key);
+            }
         }
     }
     if (key == L1) {
@@ -316,10 +351,11 @@ void handleHold(char key) {
 }
 
 void handleSinglePress(char pos){
-    if (!single) return;
-    uint8_t key = momentary[pos];
-    if (key!=NOC) {
-        Keyboard.write(key);
+    if (pos==lastPosPress){
+        uint8_t key = momentary[pos];
+        if (key!=NOC) {
+            Keyboard.write(key);
+        }
     }
 }
 
@@ -329,8 +365,14 @@ void handleRelease(char pos) {
     /* Serial.println(dep + kk); */
     int index = indexOf(pressedPos, pos, max);
     if (index>-1){
-       key = pressedKeycode[index];
-       pressedKeycode[index]=NOC;
+        key = pressedKeycode[index];
+        pressedPos[index]=EMPTY;
+        pressedKeycode[index]=NOC;
+        if(key!=NOC){
+            String rel = "Release: ";
+            Serial.println(rel + key);
+            Keyboard.release(key);
+        }
     }
     if (key==NOC||index==-1){
         key=keycode(pos);
@@ -341,10 +383,6 @@ void handleRelease(char pos) {
         if (key == L1 || key == L2 || key == L3) {
             Serial.println("Back to level 0");
             layer = 0;
-        } else {
-            String rel = "Release: ";
-            Serial.println(rel + key);
-            Keyboard.release(key);
         }
         handleSinglePress(pos);
     }
