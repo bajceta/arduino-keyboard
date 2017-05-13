@@ -46,7 +46,7 @@ const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
     NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
     NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
     NOC, NOC, NOC, NOC, KEY_ESC, ' ', ' ', KEY_TAB, NOC, NOC, NOC, NOC
 };
@@ -55,7 +55,7 @@ uint8_t matrix[][48] = {
         KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
         KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', KEY_RETURN,
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
-        L2, L2, L2, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_ESC, L3, L2
+        L2, L2, L2, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_ESC, L3, L3
     }, {
         NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '#', NOC,
         NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, '$', NOC,
@@ -64,12 +64,12 @@ uint8_t matrix[][48] = {
     },{
         NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_DELETE,
         NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
-        NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, MLATCH, NOC,
+        NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
         KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,
-        NOC, KEY_F11, KEY_F12, NOC, NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MBLEFT, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }
 };
@@ -199,6 +199,10 @@ bool isMouseMove(char key) {
             return true;
         case MDOWN:
             return true;
+        case MFAST:
+            return true;
+        case MLATCH:
+            return true;
         default:
             return false;
     }
@@ -207,7 +211,7 @@ char lastkey=EMPTY;
 int presslength=0;
 byte skipcount=0;
 byte skip;
-bool mouseLatch;
+bool mouseLatch=false;
 
 void toggleFast(){
     if (skip==9) {
@@ -216,6 +220,7 @@ void toggleFast(){
         skip=9;
     }
 }
+
 bool handleMouseMove(char key) {
     if (layer != MOUSE_LAYER) return false;
     if (key!=MLEFT&&key!=MDOWN&&key!=MRIGHT&&key!=MUP&&key!=MFAST&&key!=MLATCH) return false;
@@ -244,30 +249,36 @@ bool handleMouseMove(char key) {
     }
 }
 
-bool ml;
-bool mm;
-bool mr;
+bool ml=false;
+bool mm=false;
+bool mr=false;
 void toggleMouseLatch(){
     mouseLatch=!mouseLatch;
-    ml=true;
-    mm=true;
-    mr=true;
+    ml=false;
+    mm=false;
+    mr=false;
 }
 
 bool handleMousePress(char key) {
     if (layer != MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
-            if (!mouseLatch||ml) Mouse.press(MOUSE_LEFT);
-            ml=!ml;
+            if (!ml) {
+                Mouse.press(MOUSE_LEFT);
+                ml=true;
+            }
             return true;
         case MBMID:
-            if (!mouseLatch||mm) Mouse.press(MOUSE_MIDDLE);
-            mm=!mm;
+            if (!mm) {
+                Mouse.press(MOUSE_MIDDLE);
+                mm=true;
+            }
             return true;
         case MBRIGHT:
-            if (!mouseLatch||mr) Mouse.press(MOUSE_RIGHT);
-            mr=!mr;
+            if (!mr) {
+                Mouse.press(MOUSE_RIGHT);
+                mr=true;
+            }
             return true;
         default:
             return false;
@@ -278,18 +289,21 @@ bool handleMouseRelease(char key) {
     if (layer != MOUSE_LAYER) return false;
     switch (key) {
         case MBLEFT:
-            if (!mouseLatch||ml){
+            if (ml){
                 Mouse.release(MOUSE_LEFT);
+                ml=false;
             }
             return true;
         case MBMID:
-            if (!mouseLatch||mm){
+            if (mm){
                 Mouse.release(MOUSE_MIDDLE);
+                mm=false;
             }
             return true;
         case MBRIGHT:
-            if (!mouseLatch||mr) {
+            if (mr) {
                 Mouse.release(MOUSE_RIGHT);
+                mr=false;
             }
             return true;
         case MLATCH:
