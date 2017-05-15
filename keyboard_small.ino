@@ -55,11 +55,11 @@ uint8_t matrix[][48] = {
         KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
         KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', KEY_RETURN,
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
-        L2, L2, L2, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_ESC, L3, L3
+        L1, L2, L3, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
-        NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '#', NOC,
-        NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, '$', NOC,
-        NOC, '^', '&', '|', '(', ')', '=', '-', '+', '_', '~', NOC,
+        NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
+        NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
+        NOC, '\\', '&', '|', '(', ')', '=', '-', '+', '_', '~', NOC,
         NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC
     },{
         NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_DELETE,
@@ -207,6 +207,7 @@ bool isMouseMove(char key) {
             return false;
     }
 }
+
 char lastkey=EMPTY;
 int presslength=0;
 byte skipcount=0;
@@ -403,7 +404,7 @@ void handleRelease(char pos) {
 }
 
 char debounce[max][2];
-byte DEBOUNCE_CYCLES=4;
+byte DEBOUNCE_CYCLES=9;
 
 void addDebounce(char key){
     byte i;
