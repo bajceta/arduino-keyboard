@@ -213,6 +213,8 @@ int presslength=0;
 byte skipcount=0;
 byte skip;
 bool mouseLatch=false;
+byte startSkip=1;
+byte currentSkip=1;
 
 void toggleFast(){
     if (skip==9) {
@@ -222,10 +224,13 @@ void toggleFast(){
     }
 }
 
+bool mouseMovingNow=false;
+
 bool handleMouseMove(char key) {
     if (layer != MOUSE_LAYER) return false;
-    if (key!=MLEFT&&key!=MDOWN&&key!=MRIGHT&&key!=MUP&&key!=MFAST&&key!=MLATCH) return false;
-    if (skipcount<skip) {
+    if (key!=MLEFT&&key!=MDOWN&&key!=MRIGHT&&key!=MUP) return false;
+    mouseMovingNow=true;
+    if (skipcount<currentSkip) {
         skipcount++;
         return false;
     } else  {
@@ -253,6 +258,7 @@ bool handleMouseMove(char key) {
 bool ml=false;
 bool mm=false;
 bool mr=false;
+
 void toggleMouseLatch(){
     mouseLatch=!mouseLatch;
     ml=false;
@@ -404,7 +410,7 @@ void handleRelease(char pos) {
 }
 
 char debounce[max][2];
-byte DEBOUNCE_CYCLES=9;
+byte DEBOUNCE_CYCLES=15;
 
 void addDebounce(char key){
     byte i;
@@ -504,9 +510,31 @@ void pressSerial() {
     }
 }
 
+void beforeScan(){
+    mouseMovingNow=false;
+}
+int mouseMovingDuration=0;
+void afterScan(){
+    mouseMovingDuration++;
+    if (!mouseMovingNow) {
+        mouseMovingDuration=0;
+        currentSkip=9;
+    }
+    if (mouseMovingDuration>100){
+        currentSkip=7;
+    }
+    if (mouseMovingDuration>230){
+        currentSkip=4;
+    }
+    if (mouseMovingDuration>500){
+        currentSkip=1;
+    }
+}
+
 void scan() {
     byte col;
     byte i;
+    beforeScan();
     fillArray(pressedNow, max, EMPTY);
     for (i = 0; i < COLS; i = i + 1) {
         scan_col(i);
@@ -518,6 +546,7 @@ void scan() {
     handleSerial();
     pressSerial();
     press_release();
+    afterScan();
 }
 
 
