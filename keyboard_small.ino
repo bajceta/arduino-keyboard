@@ -29,6 +29,7 @@ const char MLATCH = '/';
 const char L1 = 1;
 const char L2 = 2;
 const char L3 = 3;
+const char L4 = 4;
 const char MUTE = 121;
 const char VDOWN = 122;
 const char VUP = 123;
@@ -55,7 +56,7 @@ uint8_t matrix[][48] = {
         KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
         KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', KEY_RETURN,
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
-        L1, L2, L3, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
+        L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
         NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
         NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
@@ -71,6 +72,11 @@ uint8_t matrix[][48] = {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
+    }, {
+        NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
+        NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
+        NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
     }
 };
 
@@ -337,7 +343,7 @@ void handlePress(char pos) {
     if (handleMousePress(key) || isMouseMove(key)) {
         Serial.println("mouse");
     } else {
-        if (key != L1 && key != L2 && key != L3) {
+        if (key != L1 && key != L2 && key != L3&& key != L4) {
             Serial.println(rel + key);
             if (!contains(pressedKeycode, key, max)){
                 int index = insert(pressedPos, pos, max);
@@ -363,6 +369,9 @@ void handlePress(char pos) {
     } else if (key == L3) {
         Serial.println("Level 3");
         layer = 3;
+    } else if (key == L4) {
+        Serial.println("Level 4");
+        layer = 4;
     }
 
 }
@@ -401,7 +410,7 @@ void handleRelease(char pos) {
     if (handleMouseRelease(key) || isMouseMove(key)) {
         Serial.println("mouse");
     } else {
-        if (key == L1 || key == L2 || key == L3) {
+        if (key == L1 || key == L2 || key == L3 || key == L4) {
             Serial.println("Back to level 0");
             layer = 0;
         }
@@ -513,7 +522,9 @@ void pressSerial() {
 void beforeScan(){
     mouseMovingNow=false;
 }
+
 int mouseMovingDuration=0;
+
 void afterScan(){
     mouseMovingDuration++;
     if (!mouseMovingNow) {
