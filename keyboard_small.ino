@@ -74,9 +74,9 @@ uint8_t matrix[][48] = {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
         NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
-        NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
-        NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
+            NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
+            NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
+            NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
     }
 };
 
@@ -299,32 +299,36 @@ bool handleMousePress(char key) {
 }
 
 bool handleMouseRelease(char key) {
-    if (layer != MOUSE_LAYER) return false;
+    /* if (layer != MOUSE_LAYER) return false; */
     switch (key) {
         case MBLEFT:
             if (ml){
                 Mouse.release(MOUSE_LEFT);
                 ml=false;
+                return true;
             }
-            return true;
+            return false;
         case MBMID:
             if (mm){
                 Mouse.release(MOUSE_MIDDLE);
                 mm=false;
+                return true;
             }
-            return true;
+            return false;
         case MBRIGHT:
             if (mr) {
                 Mouse.release(MOUSE_RIGHT);
                 mr=false;
+                return true;
             }
-            return true;
-        case MLATCH:
-            toggleMouseLatch();
-            return true;
-        case MFAST:
-            toggleFast();
-            return true;
+            return false;
+            /* case MLATCH: */
+
+            /* toggleMouseLatch(); */
+            /* return true; */
+            /* case MFAST: */
+            /* toggleFast(); */
+            /* return true; */
         default:
             return false;
     }
@@ -407,6 +411,7 @@ void handleRelease(char pos) {
     if (key==NOC||index==-1){
         key=keycode(pos);
     }
+
     if (handleMouseRelease(key) || isMouseMove(key)) {
         Serial.println("mouse");
     } else {
