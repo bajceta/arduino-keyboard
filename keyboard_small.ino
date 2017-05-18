@@ -385,7 +385,7 @@ void handleHold(char key) {
 }
 
 void handleSinglePress(char pos){
-    if (pos==lastPosPress){
+    if (pos==lastPosPress&&layer==0){
         uint8_t key = momentary[pos];
         if (key!=NOC) {
             Keyboard.write(key);
