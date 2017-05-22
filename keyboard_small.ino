@@ -36,47 +36,47 @@ const char VUP = 123;
 const char MICMUTE = 198;
 const byte EMPTY_POS = 254;
 uint8_t pressedKey[] = {};
-const byte LEFT_ROWS = 6;
+const byte LEFT_ROWS = 7;
 const byte LEFT_COLS = 5;
-const byte ROWS = 6;
+const byte ROWS = 7;
 const byte COLS = 4;
-const byte ROWS_TOTAL=12;
-int rows[] = {7, 6, 5, 4, 3, 2};
+const byte ROWS_TOTAL=14;
+int rows[] = {8, 7, 6, 5, 4, 3, 2};
 int cols[] = {A1, A2, A3, A4};
 const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
-    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, KEY_ESC, ' ', ' ', KEY_TAB, NOC, NOC, NOC, NOC
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, KEY_ESC,  NOC, NOC, NOC, NOC, KEY_TAB, NOC, NOC, NOC, NOC
 };
-uint8_t matrix[][48] = {
+uint8_t matrix[][56] = {
     {
-        KEY_TAB, 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
-        KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', KEY_RETURN,
-        KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
-        L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, L2, KEY_LEFT_SHIFT, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
+        KEY_TAB, 'q', 'w', 'e', 'r', 't', NOC, NOC, 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
+        KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RETURN,
+        KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
+        L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI, ' ', L1, L2, ' ', KEY_LEFT_SHIFT, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
-        NOC, '!', '"', '\'', '[', ']', KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
-        NOC, '@', '\\', '%', '{', '}', KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
-        NOC, '\\', '&', '|', '(', ')', '=', '-', '+', '_', '~', NOC,
-        NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC
+        NOC, '!', '"', '\'', '[', ']', NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
+        NOC, '@', '\\', '%', '{', '}', NOC, NOC, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
+        NOC, '\\', '&', '|', '(', ')', NOC, NOC, '=', '-', '+', '_', '~', NOC,
+        NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     },{
-        NOC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', KEY_DELETE,
-        NOC, '4', '5', '6', '-', '+', MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
-        NOC, '7', '8', '9', '0', '*', MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
+        NOC, '1', '2', '3', '4', '5', NOC, NOC, '6', '7', '8', '9', '0', KEY_DELETE,
+        NOC, '4', '5', '6', '-', '+', NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
+        NOC, '7', '8', '9', '0', '*', NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
-        KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
+        KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5, NOC, NOC,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
-        NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
-            NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
-            NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
-            NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
+            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
+            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
+            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
     }
 };
 

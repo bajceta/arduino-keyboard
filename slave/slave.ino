@@ -1,10 +1,10 @@
 
-byte ROWS = 6;
+byte ROWS = 7;
 byte COLS = 5;
 const byte max = 10;
 const char EMPTY = 126;
 
-int rows[] = {7,6,5,4,3,2};
+int rows[] = {8,7,6,5,4,3,2};
 int cols[] = {A0,A1, A2,A3, A4};
 
 char pressed[max]={};
