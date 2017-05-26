@@ -58,7 +58,7 @@ uint8_t matrix[][56] = {
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
         L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI,  L1, L2, KEY_BACKSPACE, L2, KEY_RIGHT_CTRL, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
-        NOC, '!', '"', '\'', '[', ']', NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
+        NOC, '`', '"', '\'', '[', ']', NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
         NOC, '@', '\\', '%', '{', '}', NOC, NOC, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
         NOC, '\\', '&', '|', '(', ')', NOC, NOC, '=', '-', '+', '_', '~', NOC,
         NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
@@ -74,9 +74,9 @@ uint8_t matrix[][56] = {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
-            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
-            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
-            NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
     }
 };
 
