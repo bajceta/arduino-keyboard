@@ -47,14 +47,14 @@ const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
     KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    KEY_TAB, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
     NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
     NOC, NOC, NOC, NOC, KEY_ESC, ' ', KEY_TAB, KEY_BACKSPACE, ' ', KEY_TAB, NOC, NOC, NOC, NOC
 };
 uint8_t matrix[][56] = {
     {
         KEY_LEFT_ALT, 'q', 'w', 'e', 'r', 't', NOC, NOC, 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
-        KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RETURN,
+        KEY_TAB, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RETURN,
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
         L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI,  L1, L2, L1, L2, KEY_RIGHT_CTRL, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
@@ -64,19 +64,20 @@ uint8_t matrix[][56] = {
         NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     },{
         NOC, '1', '2', '3', '4', '5', NOC, NOC, '6', '7', '8', '9', '0', KEY_DELETE,
-        NOC, '4', '5', '6', '-', '+', NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
-        NOC, '7', '8', '9', '0', '*', NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
-    }, {
-        KEY_F12,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5, NOC, NOC,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+        KEY_F11, KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5, NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
+        KEY_F12, KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10, NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }, {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
+    }, {
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_BACKSPACE,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
+        NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
+        //NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }
 };
 
