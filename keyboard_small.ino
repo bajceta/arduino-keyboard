@@ -47,16 +47,16 @@ const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
     KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
-    NOC, NOC, NOC, NOC, KEY_ESC, ' ', KEY_TAB, KEY_BACKSPACE, ' ', KEY_TAB, NOC, NOC, NOC, NOC
+    KEY_TAB, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, KEY_RETURN,
+    KEY_ESC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC,
+    NOC, NOC, NOC, NOC, NOC, ' ', KEY_TAB, KEY_BACKSPACE, ' ', KEY_TAB, NOC, NOC, NOC, NOC
 };
 uint8_t matrix[][56] = {
     {
-        KEY_LEFT_ALT, 'q', 'w', 'e', 'r', 't', NOC, NOC, 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
-        KEY_TAB, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RETURN,
-        KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_LEFT_SHIFT,
-        L1, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI,  L1, L2, L1, L2, KEY_RIGHT_CTRL, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
+        KEY_LEFT_CTRL, 'q', 'w', 'e', 'r', 't', NOC, NOC, 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
+        KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RIGHT_CTRL,
+        KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT,
+        KEY_LEFT_CTRL, L2, L4, KEY_LEFT_ALT, KEY_LEFT_GUI,  L1, L2, L1, L2, KEY_RIGHT_CTRL, KEY_RETURN, KEY_RIGHT_ALT, KEY_RIGHT_CTRL, L3
     }, {
         NOC, '`', '"', '\'', '[', ']', NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
         NOC, '@', '\\', '%', '{', '}', NOC, NOC, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
