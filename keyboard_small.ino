@@ -42,7 +42,7 @@ const byte ROWS = 7;
 const byte COLS = 4;
 const byte ROWS_TOTAL=14;
 int rows[] = {8, 7, 6, 5, 4, 3, 2};
-int cols[] = {A1, A2, A3, A4};
+int cols[] = {A0, A1, A2, A3};
 const byte MOUSE_LAYER = 2;
 
 uint8_t momentary[] = {
