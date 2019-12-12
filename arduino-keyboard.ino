@@ -56,18 +56,18 @@ uint8_t matrix[][56] = {
         KEY_LEFT_CTRL, 'q', 'w', 'e', 'r', 't', NOC, NOC, 'y', 'u', 'i', 'o', 'p', KEY_BACKSPACE,
         KEY_LEFT_CTRL, 'a', 's', 'd', 'f', 'g', NOC, NOC, 'h', 'j', 'k', 'l', ';', KEY_RETURN,
         KEY_LEFT_SHIFT, 'z', 'x', 'c', 'v', 'b', NOC, NOC, 'n', 'm', ',', '.', '/', KEY_RIGHT_SHIFT,
-        KEY_LEFT_CTRL, L3, L4, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, ' ', KEY_TAB, L2, KEY_RIGHT_ALT, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW
+        KEY_LEFT_CTRL, L3, L4, KEY_LEFT_ALT, KEY_LEFT_GUI, L1, ' ', KEY_TAB, L2, KEY_RIGHT_CTRL, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW
     }, {// L1
-        NOC, '1', '2', '3', '4', '5', NOC, NOC,             '6', '7', '8', '9', '0', KEY_BACKSPACE,
+        NOC, '1', '2', '3', '4', '5', NOC, NOC, '6', '7', '8', '9', '0', KEY_BACKSPACE,
         NOC, '@', '\\', '%', '[', ']', NOC, NOC, KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, ';', '\'',
         NOC, '\\', '&', '|', '(', ')', NOC, NOC, '=', '-', '+', '_', '~', NOC,
         NOC, NOC, NOC, NOC, NOC,  NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     },{// L2
-        NOC, '`', '"', '\'', '[', ']', NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '[', ']',
-        NOC, KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5, NOC, NOC,  '+', '4', '5', '6', '-', KEY_RETURN,
+        NOC, '`', '"', '\'', '[', ']', NOC, NOC, NOC, NOC, NOC,   NOC, '[', ']',
+        NOC, KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5, NOC, NOC, KEY_HOME, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_END, '-', KEY_RETURN,
         NOC, KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10, NOC, NOC, '*', '1', '2', '3', '/', NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
-    }, {// L3   MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,     , MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
+    }, {// L3   
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '7', '8', '9', '/', '*', KEY_DELETE,
         NOC, KEY_F11, NOC, NOC, NOC, NOC, NOC, NOC, MLEFT, MDOWN, MUP, MRIGHT, MFAST, NOC,
         NOC, KEY_F12, NOC, NOC, NOC, NOC, NOC, NOC, MBLEFT, MBMID, MBRIGHT, NOC, NOC, NOC,
@@ -77,7 +77,6 @@ uint8_t matrix[][56] = {
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '4', '5', '6', '-', '+', KEY_RETURN,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '1', '2', '3',  '=', '%', NOC,
         NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, '.', '0', NOC, NOC, NOC, NOC
-        //NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC, NOC
     }
 };
 
